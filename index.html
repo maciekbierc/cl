@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Licznik czasu aktywności</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+    }
+    #czas {
+      font-size: 2em;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Licznik czasu aktywności</h1>
+  <p>Licznik zatrzymuje się, jeśli nie wykryje aktywności przez 1 minutę.</p>
+  <div id="czas">00:00:00</div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      let czas = 0;
+      let ostatniaAktywnosc = Date.now();
+      const timeoutMs = 60000; // 1 minuta
+
+      function formatujCzas(s) {
+        const godziny = String(Math.floor(s / 3600)).padStart(2, '0');
+        const minuty = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+        const sekundy = String(s % 60).padStart(2, '0');
+        return `${godziny}:${minuty}:${sekundy}`;
+      }
+
+      function zarejestrujAktywnosc() {
+        ostatniaAktywnosc = Date.now();
+      }
+
+      document.addEventListener('mousemove', zarejestrujAktywnosc);
+      document.addEventListener('keydown', zarejestrujAktywnosc);
+
+      setInterval(() => {
+        const teraz = Date.now();
+        if (teraz - ostatniaAktywnosc < timeoutMs) {
+          czas++;
+          document.getElementById('czas').textContent = formatujCzas(czas);
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
